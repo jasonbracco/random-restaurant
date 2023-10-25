@@ -19,7 +19,7 @@ function App() {
 
   return (
     <div className="main-container">
-      <p className="welcome-text">Enter in a restaurant here:</p>
+      <p className="welcome-text">Enter in a restaurant here!!</p>
       <form onSubmit={handleRestaurantSubmit} className="neighborhood-searchbar">
         <input
           type="text"
