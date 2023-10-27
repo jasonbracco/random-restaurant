@@ -9,7 +9,7 @@ function App() {
   console.log(restaurantSearchText)
   console.log(error)
 
-  const apiKey = 'AIzaSyAK9CEKSZvK2Aw2fyVlyx-Z42QTgOzqoCM'
+  const apiKey = 'insert-key-here'
 
   const handleRestaurantSubmit = async (event) => {
     event.preventDefault()
