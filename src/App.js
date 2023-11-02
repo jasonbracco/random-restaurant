@@ -1,6 +1,5 @@
 import './App.css';
 import { useState } from 'react'
-import { apiKey } from './config/config.js'; //Create your own API key using Google Places
 
 
 function App() {
@@ -8,13 +7,14 @@ function App() {
   const [restaurantSearchText, setRestaurantSearchText] = useState("") ;
   const [restaurants, setRestaurants] = useState([]);
   const [error, setError] = useState('');
+  console.log(restaurants)
   console.log(restaurantSearchText)
   console.log(error)
 
   const handleRestaurantSubmit = async (event) => {
     event.preventDefault()
     try {
-      const response = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurants%in%${restaurantSearchText}%new%york&key=${apiKey}`);
+      const response = await fetch(`http://localhost:3001/places?query=${restaurantSearchText}`);
       if(!response.ok) {
         throw new Error(`Error!  Status: ${response.status}`);
       }
@@ -53,6 +53,11 @@ function App() {
         />
         <button>Find a Restaurant!</button>
       </form>
+      <div>
+        {restaurants.map((r) => 
+          <p key={r.name}>{r.name}</p>
+        )}
+      </div>
     </div>
   );
 }
