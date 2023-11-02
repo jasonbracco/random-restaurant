@@ -1,15 +1,16 @@
 import './App.css';
 import { useState } from 'react'
+import { apiKey } from './config/config.js'; //Create your own API key using Google Places
+
 
 function App() {
 
   const [restaurantSearchText, setRestaurantSearchText] = useState("") ;
   const [restaurants, setRestaurants] = useState([]);
   const [error, setError] = useState('');
+  console.log(apiKey)
   console.log(restaurantSearchText)
   console.log(error)
-
-  const apiKey = 'insert-key-here'
 
   const handleRestaurantSubmit = async (event) => {
     event.preventDefault()
