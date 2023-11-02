@@ -8,7 +8,6 @@ function App() {
   const [restaurantSearchText, setRestaurantSearchText] = useState("") ;
   const [restaurants, setRestaurants] = useState([]);
   const [error, setError] = useState('');
-  console.log(apiKey)
   console.log(restaurantSearchText)
   console.log(error)
 
