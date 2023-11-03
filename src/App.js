@@ -42,7 +42,8 @@ function App() {
 
   return (
     <div className="main-container">
-      <p className="welcome-text">Enter in a restaurant here</p>
+      <p className="welcome-text">Enter in a New York City Neighborhood Here</p>
+      <p>When you click the button, a random restaurant will appear like magic!</p>
       <form onSubmit={handleRestaurantSubmit} className="neighborhood-searchbar">
         <input
           type="text"
