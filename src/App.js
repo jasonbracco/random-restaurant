@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 
 function App() {
@@ -7,8 +7,7 @@ function App() {
   const [restaurantSearchText, setRestaurantSearchText] = useState("") ;
   const [restaurants, setRestaurants] = useState([]);
   const [error, setError] = useState('');
-  console.log(restaurants)
-  console.log(error)
+  const [nextPageToken, setNextPageToken] = useState("");
 
   const handleRestaurantSubmit = async (event) => {
     event.preventDefault()
@@ -20,8 +19,7 @@ function App() {
 
       const data = await response.json();
       const results = data.results;
-      console.log(data)
-      console.log(results)
+
       if (results.length > 0) {
         setRestaurants(results);
         setError('');
@@ -36,6 +34,19 @@ function App() {
       setError(`Error: ${error.message}`);
     }
   }
+
+  const fetchNextPage = async () => {
+    try {
+
+    }
+    catch {
+
+    }
+  }
+
+  useEffect(() => {
+
+  })
 
 
 
