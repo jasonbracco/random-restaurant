@@ -8,7 +8,6 @@ function App() {
   const [restaurants, setRestaurants] = useState([]);
   const [error, setError] = useState('');
   console.log(restaurants)
-  console.log(restaurantSearchText)
   console.log(error)
 
   const handleRestaurantSubmit = async (event) => {
