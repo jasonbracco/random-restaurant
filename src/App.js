@@ -9,6 +9,8 @@ function App() {
   const [error, setError] = useState('');
   const [nextPageToken, setNextPageToken] = useState("");
   const [buttonClicked, setButtonClicked] = useState(false)
+  const [numberOfRenders, setNumberOfRenders] = useState(0);
+  console.log()
   console.log(nextPageToken)
 
   const handleRestaurantSubmit = async (event) => {
@@ -17,6 +19,7 @@ function App() {
     setError("")
     setNextPageToken("")
     setButtonClicked(true)
+    setNumberOfRenders(0)
     try {
       const response = await fetch(`http://localhost:3001/places?query=${restaurantSearchText}`);
       if(!response.ok) {
@@ -42,40 +45,47 @@ function App() {
       setRestaurants([]);
       setError(`Error: ${error.message}`);
     }
+    setNumberOfRenders(numberOfRenders + 1)
   }
 
   const fetchNextPage = async () => {
-    try {
-      if (nextPageToken && buttonClicked) {
-        const response = await fetch(`http://localhost:3001/places?nextPageToken=${encodeURIComponent(nextPageToken)}`);
-        if (!response.ok) {
-          throw new Error(`Error.  Status: ${response.status}`);
-        }
+    if (numberOfRenders > 7) {
+      return ;
+    }
+    else {
+      try {
+        if (nextPageToken && buttonClicked) {
+          const response = await fetch(`http://localhost:3001/places?nextPageToken=${encodeURIComponent(nextPageToken)}`);
+          if (!response.ok) {
+            throw new Error(`Error.  Status: ${response.status}`);
+          }
 
-        const data = await response.json();
-        console.log(data)
-        const results = data.results;
-        console.log(results)
+          const data = await response.json();
+          console.log(data)
+          const results = data.results;
+          console.log(results)
 
-        if (results.length > 0) {
-          setRestaurants([...restaurants, ...results]);
-          setNextPageToken(data.next_page_token);
-        }
-        else {
-          setNextPageToken("");
+          if (results.length > 0) {
+            setRestaurants([...restaurants, ...results]);
+            setNextPageToken(data.next_page_token);
+          }
+          else {
+            setNextPageToken("");
+          }
         }
       }
+      catch (error) {
+        setError(`Error: ${error.message}`);
+      }
     }
-    catch (error) {
-      setError(`Error: ${error.message}`);
-    }
+    setNumberOfRenders(numberOfRenders + 1)
   };
 
   useEffect(() => {
     if (nextPageToken){
       fetchNextPage();
     }
-  }, [nextPageToken, buttonClicked]);
+  }, [nextPageToken, numberOfRenders]);
 
   return (
     <div className="main-container">
