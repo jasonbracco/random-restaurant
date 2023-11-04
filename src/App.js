@@ -8,17 +8,25 @@ function App() {
   const [restaurants, setRestaurants] = useState([]);
   const [error, setError] = useState('');
   const [nextPageToken, setNextPageToken] = useState("");
+  console.log(restaurants)
 
   const handleRestaurantSubmit = async (event) => {
     event.preventDefault()
+    setRestaurants([])
+    setError("")
+    setNextPageToken("")
     try {
       const response = await fetch(`http://localhost:3001/places?query=${restaurantSearchText}`);
       if(!response.ok) {
-        throw new Error(`Error!  Status: ${response.status}`);
+        throw new Error(`Error.  Status: ${response.status}`);
       }
 
       const data = await response.json();
       const results = data.results;
+      console.log(data)
+      console.log(data.next_page_token)
+      setNextPageToken(data.next_page_token)
+      console.log(nextPageToken)
 
       if (results.length > 0) {
         setRestaurants(results);
@@ -37,19 +45,35 @@ function App() {
 
   const fetchNextPage = async () => {
     try {
+      if (nextPageToken) {
+        const response = await fetch(`http://localhost:3001/places?query=${nextPageToken}`);
+        if (!response.ok) {
+          throw new Error(`Error.  Status: ${response.status}`);
+        }
 
-    }
-    catch {
+        const data = await response.json();
+        const results = data.results;
+        console.log(results)
 
+        if (results.length > 0) {
+          setRestaurants([...restaurants, ...results]);
+          setNextPageToken(data.next_page_token);
+        }
+        else {
+          setNextPageToken("");
+        }
+      }
     }
-  }
+    catch (error) {
+      setError(`Error: ${error.message}`);
+    }
+  };
 
   useEffect(() => {
-
-  })
-
-
-
+    if (nextPageToken){
+      fetchNextPage();
+    }
+  }, [nextPageToken, fetchNextPage]);
 
   return (
     <div className="main-container">
