@@ -10,8 +10,7 @@ function App() {
   const [nextPageToken, setNextPageToken] = useState("");
   const [buttonClicked, setButtonClicked] = useState(false)
   const [numberOfRenders, setNumberOfRenders] = useState(0);
-  console.log()
-  console.log(nextPageToken)
+  console.log(restaurants)
 
   const handleRestaurantSubmit = async (event) => {
     event.preventDefault()
@@ -28,9 +27,7 @@ function App() {
 
       const data = await response.json();
       const results = data.results;
-      console.log(data.next_page_token)
       setNextPageToken(data.next_page_token)
-      console.log(nextPageToken)
 
       if (results.length > 0) {
         setRestaurants(results);
@@ -49,7 +46,7 @@ function App() {
   }
 
   const fetchNextPage = async () => {
-    if (numberOfRenders > 7) {
+    if (numberOfRenders > 5) {
       return ;
     }
     else {
@@ -61,11 +58,9 @@ function App() {
           }
 
           const data = await response.json();
-          console.log(data)
           const results = data.results;
-          console.log(results)
 
-          if (results.length > 0) {
+          if (results.length > 3) {
             setRestaurants([...restaurants, ...results]);
             setNextPageToken(data.next_page_token);
           }
@@ -101,8 +96,8 @@ function App() {
         <button>Find a Restaurant!</button>
       </form>
       <div>
-        {restaurants.map((r) => 
-          <p key={r.name}>{r.name}</p>
+        {restaurants.map((r, index) => 
+          <p key={index}>{r.name}</p>
         )}
       </div>
     </div>
