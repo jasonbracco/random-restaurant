@@ -8,13 +8,15 @@ function App() {
   const [restaurants, setRestaurants] = useState([]);
   const [error, setError] = useState('');
   const [nextPageToken, setNextPageToken] = useState("");
-  console.log(restaurants)
+  const [buttonClicked, setButtonClicked] = useState(false)
+  console.log(nextPageToken)
 
   const handleRestaurantSubmit = async (event) => {
     event.preventDefault()
     setRestaurants([])
     setError("")
     setNextPageToken("")
+    setButtonClicked(true)
     try {
       const response = await fetch(`http://localhost:3001/places?query=${restaurantSearchText}`);
       if(!response.ok) {
@@ -23,7 +25,6 @@ function App() {
 
       const data = await response.json();
       const results = data.results;
-      console.log(data)
       console.log(data.next_page_token)
       setNextPageToken(data.next_page_token)
       console.log(nextPageToken)
@@ -45,13 +46,14 @@ function App() {
 
   const fetchNextPage = async () => {
     try {
-      if (nextPageToken) {
-        const response = await fetch(`http://localhost:3001/places?query=${nextPageToken}`);
+      if (nextPageToken && buttonClicked) {
+        const response = await fetch(`http://localhost:3001/places?nextPageToken=${encodeURIComponent(nextPageToken)}`);
         if (!response.ok) {
           throw new Error(`Error.  Status: ${response.status}`);
         }
 
         const data = await response.json();
+        console.log(data)
         const results = data.results;
         console.log(results)
 
@@ -73,7 +75,7 @@ function App() {
     if (nextPageToken){
       fetchNextPage();
     }
-  }, [nextPageToken, fetchNextPage]);
+  }, [nextPageToken, buttonClicked]);
 
   return (
     <div className="main-container">
