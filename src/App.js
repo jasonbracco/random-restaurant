@@ -8,8 +8,8 @@ function App() {
   const [restaurants, setRestaurants] = useState([]);
   const [error, setError] = useState('');
   const [nextPageToken, setNextPageToken] = useState("");
-  const [buttonClicked, setButtonClicked] = useState(false)
   const [numberOfRenders, setNumberOfRenders] = useState(0);
+  console.log(nextPageToken)
   console.log(restaurants)
 
   const handleRestaurantSubmit = async (event) => {
@@ -17,7 +17,6 @@ function App() {
     setRestaurants([])
     setError("")
     setNextPageToken("")
-    setButtonClicked(true)
     setNumberOfRenders(0)
     try {
       const response = await fetch(`http://localhost:3001/places?query=${restaurantSearchText}`);
@@ -27,6 +26,7 @@ function App() {
 
       const data = await response.json();
       const results = data.results;
+      console.log(data)
       setNextPageToken(data.next_page_token)
 
       if (results.length > 0) {
@@ -46,12 +46,12 @@ function App() {
   }
 
   const fetchNextPage = async () => {
-    if (numberOfRenders > 5) {
+    if (numberOfRenders > 10) {
       return ;
     }
     else {
       try {
-        if (nextPageToken && buttonClicked) {
+        if (nextPageToken) {
           const response = await fetch(`http://localhost:3001/places?nextPageToken=${encodeURIComponent(nextPageToken)}`);
           if (!response.ok) {
             throw new Error(`Error.  Status: ${response.status}`);
