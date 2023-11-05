@@ -9,6 +9,9 @@ function App() {
   const [error, setError] = useState('');
   const [nextPageToken, setNextPageToken] = useState("");
   const [numberOfRenders, setNumberOfRenders] = useState(0);
+  const [singleRestaurant, setSingleRestaurant] = useState()
+  console.log(restaurants)
+  console.log(singleRestaurant)
 
   const handleRestaurantSubmit = async (event) => {
     event.preventDefault()
@@ -41,12 +44,11 @@ function App() {
       setError(`Error: ${error.message}`);
     }
     setNumberOfRenders(1)
-
   }
 
   const fetchNextPage = async () => {
-    if (numberOfRenders > 1) {
-      return ;
+    if (numberOfRenders > 3) {
+      setSingleRestaurant(restaurants[Math.floor(Math.random() * restaurants.length)])
     }
     else {
       try {
@@ -60,12 +62,12 @@ function App() {
           const data = await response.json();
           const results = data.results;
 
-          if (results.length > 3) {
+          if (results.length > 0) {
             setRestaurants([...restaurants, ...results]);
             setNextPageToken(data.next_page_token);
           }
           else {
-            setNextPageToken("");
+            setNextPageToken(undefined);
           }
         }
       }
@@ -74,6 +76,7 @@ function App() {
       }
     }
     setNumberOfRenders(numberOfRenders + 1);
+    // setSingleRestaurant(restaurants[Math.floor(Math.random() * restaurants.length)])
   };
 
   useEffect(() => {
@@ -81,6 +84,8 @@ function App() {
       fetchNextPage();
     }
   }, [nextPageToken]);
+
+
 
   return (
     <div className="main-container">
@@ -96,9 +101,7 @@ function App() {
         <button>Find a Restaurant!</button>
       </form>
       <div>
-        {restaurants.map((r, index) => 
-          <p key={index}>{r.name}</p>
-        )}
+        {singleRestaurant? singleRestaurant.name : ""}
       </div>
     </div>
   );
