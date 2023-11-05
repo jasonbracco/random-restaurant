@@ -76,7 +76,6 @@ function App() {
       }
     }
     setNumberOfRenders(numberOfRenders + 1);
-    // setSingleRestaurant(restaurants[Math.floor(Math.random() * restaurants.length)])
   };
 
   useEffect(() => {
@@ -101,7 +100,21 @@ function App() {
         <button>Find a Restaurant!</button>
       </form>
       <div>
-        {singleRestaurant? singleRestaurant.name : ""}
+        {singleRestaurant? (
+          <div>
+            <br></br>
+            <br></br>
+            Name: {singleRestaurant.name}
+            <br></br>
+            <br></br>
+            Address: {singleRestaurant.formatted_address}
+            <br></br>
+            <br></br>
+            Rating: {singleRestaurant.rating}
+          </div>
+          ): (
+           "")
+        }
       </div>
     </div>
   );
