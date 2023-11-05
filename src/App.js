@@ -9,16 +9,15 @@ function App() {
   const [error, setError] = useState('');
   const [nextPageToken, setNextPageToken] = useState("");
   const [numberOfRenders, setNumberOfRenders] = useState(0);
-  console.log(nextPageToken)
-  console.log(restaurants)
 
   const handleRestaurantSubmit = async (event) => {
     event.preventDefault()
     setRestaurants([])
     setError("")
-    setNextPageToken("")
+    setNextPageToken("") 
     setNumberOfRenders(0)
     try {
+      console.log(`Inital Render`)
       const response = await fetch(`http://localhost:3001/places?query=${restaurantSearchText}`);
       if(!response.ok) {
         throw new Error(`Error.  Status: ${response.status}`);
@@ -26,7 +25,6 @@ function App() {
 
       const data = await response.json();
       const results = data.results;
-      console.log(data)
       setNextPageToken(data.next_page_token)
 
       if (results.length > 0) {
@@ -42,15 +40,17 @@ function App() {
       setRestaurants([]);
       setError(`Error: ${error.message}`);
     }
-    setNumberOfRenders(numberOfRenders + 1)
+    setNumberOfRenders(1)
+
   }
 
   const fetchNextPage = async () => {
-    if (numberOfRenders > 10) {
+    if (numberOfRenders > 1) {
       return ;
     }
     else {
       try {
+        console.log(`Secondary Page Render`)
         if (nextPageToken) {
           const response = await fetch(`http://localhost:3001/places?nextPageToken=${encodeURIComponent(nextPageToken)}`);
           if (!response.ok) {
@@ -73,14 +73,14 @@ function App() {
         setError(`Error: ${error.message}`);
       }
     }
-    setNumberOfRenders(numberOfRenders + 1)
+    setNumberOfRenders(numberOfRenders + 1);
   };
 
   useEffect(() => {
     if (nextPageToken){
       fetchNextPage();
     }
-  }, [nextPageToken, numberOfRenders]);
+  }, [nextPageToken]);
 
   return (
     <div className="main-container">
