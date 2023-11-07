@@ -11,7 +11,6 @@ function App() {
   const [numberOfRenders, setNumberOfRenders] = useState(0);
   const [singleRestaurant, setSingleRestaurant] = useState()
   const [singleRestaurantAddress, setSingleRestaurantAddress] = useState("")
-  console.log(singleRestaurantAddress)
 
   const handleRestaurantSubmit = async (event) => {
     event.preventDefault()
@@ -21,7 +20,6 @@ function App() {
     setNumberOfRenders(0)
     setSingleRestaurantAddress("")
     try {
-      console.log(`Inital Render`)
       const response = await fetch(`http://localhost:3001/places?query=${restaurantSearchText}`);
       if(!response.ok) {
         throw new Error(`Error.  Status: ${response.status}`);
@@ -49,11 +47,26 @@ function App() {
 
   const fetchNextPage = async () => {
     if (numberOfRenders > 3) {
-      setSingleRestaurant(restaurants[Math.floor(Math.random() * restaurants.length)])
+      const randomRestaurant = restaurants[Math.floor(Math.random() * restaurants.length)]
+      setSingleRestaurant(randomRestaurant)
+      setMapAddress()
+      // console.log(randomRestaurant.formatted_address)
+      // try {
+      //   console.log(singleRestaurant.formatted_address)
+      //   const response = await fetch (`http://localhost:3001/maps?center=${encodeURIComponent(singleRestaurant.formatted_address)}`);
+      //   if (!response.ok) {
+      //     throw new Error(`Error.  Status: ${response.status}`);
+      //   }
+      //   console.log(singleRestaurant)
+      //   const data = await response.json();
+      //   const results = data.results;
+      // }
+      // catch (error) {
+      //   setError(`Error: ${error.message}`);
+      // }
     }
     else {
       try {
-        console.log(`Secondary Page Render`)
         if (nextPageToken) {
           const response = await fetch(`http://localhost:3001/places?nextPageToken=${encodeURIComponent(nextPageToken)}`);
           if (!response.ok) {
@@ -76,17 +89,32 @@ function App() {
         setError(`Error: ${error.message}`);
       }
     }
-    setSingleRestaurantAddress(singleRestaurant.formatted_address)
     setNumberOfRenders(numberOfRenders + 1);
   };
+
+  const setMapAddress = async () => {
+    try {
+      console.log(singleRestaurant.formatted_address)
+      const response = await fetch (`http://localhost:3001/maps?center=${encodeURIComponent(singleRestaurant.formatted_address)}`);
+      if (!response.ok) {
+        throw new Error(`Error.  Status: ${response.status}`);
+      }
+      console.log(singleRestaurant)
+      const data = await response.json();
+      const results = data.results;
+    }
+    catch (error) {
+      setError(`Error: ${error.message}`);
+    }
+  }
+
+  
 
   useEffect(() => {
     if (nextPageToken){
       fetchNextPage();
     }
   }, [nextPageToken]);
-
-
 
   return (
     <div className="main-container">
@@ -113,9 +141,26 @@ function App() {
             <br></br>
             <br></br>
             Rating: {singleRestaurant.rating}
+            <br></br>
+            <br></br>
+            Asdress I am trying to console.log: {singleRestaurant.formatted_address}
           </div>
           ): (
            "")
+        }
+      </div>
+      <div>
+        <br></br>
+        <br></br>
+        {singleRestaurantAddress ? (
+          <div>
+            "True, dummy"
+          </div>
+        ) : (
+          <div>
+            "False, dummy"
+          </div>
+        )
         }
       </div>
     </div>
