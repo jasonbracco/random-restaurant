@@ -10,8 +10,8 @@ function App() {
   const [nextPageToken, setNextPageToken] = useState("");
   const [numberOfRenders, setNumberOfRenders] = useState(0);
   const [singleRestaurant, setSingleRestaurant] = useState()
-  console.log(restaurants)
-  console.log(singleRestaurant)
+  const [singleRestaurantAddress, setSingleRestaurantAddress] = useState("")
+  console.log(singleRestaurantAddress)
 
   const handleRestaurantSubmit = async (event) => {
     event.preventDefault()
@@ -19,6 +19,7 @@ function App() {
     setError("")
     setNextPageToken("") 
     setNumberOfRenders(0)
+    setSingleRestaurantAddress("")
     try {
       console.log(`Inital Render`)
       const response = await fetch(`http://localhost:3001/places?query=${restaurantSearchText}`);
@@ -75,6 +76,7 @@ function App() {
         setError(`Error: ${error.message}`);
       }
     }
+    setSingleRestaurantAddress(singleRestaurant.formatted_address)
     setNumberOfRenders(numberOfRenders + 1);
   };
 
